@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"github.com/ibesuperv/Distributed-File-Storage-System/p2p"
 	"encoding/binary"
 	"encoding/gob"
 	"fmt"
@@ -10,6 +9,8 @@ import (
 	"log"
 	"sync"
 	"time"
+
+	"github.com/ibesuperv/Distributed-File-Storage-System/p2p"
 )
 
 type FileServerOpts struct {

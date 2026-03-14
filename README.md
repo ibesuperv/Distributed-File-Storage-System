@@ -2,17 +2,18 @@
 
 [![Go Version](https://img.shields.io/badge/Go-1.26+-00ADD8?style=flat&logo=go)](https://golang.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![GitHub Star](https://img.shields.io/github/stars/ibesuperv/Distributed-File-Storage-System?style=flat&logo=github)](https://github.com/ibesuperv/Distributed-File-Storage-System)
 [![Architecture](https://img.shields.io/badge/Architecture-P2P%20%7C%20CAS%20%7C%20Streaming-blueviolet)]()
 
-**Distributed-File-Storage-System** is a high-performance, decentralized file storage infrastructure engineered in Go. It solves the core challenges of peer-to-peer data distribution by harmonizing **Content-Addressable Storage (CAS)**, **Custom Wire Protocols**, and **Streaming Cryptography**.
+**Distributed-File-Storage-System** is a high-performance, decentralized file storage infrastructure engineered in Go. It solves the "Large File" problem in peer-to-peer networks by combining **Content-Addressable Storage (CAS)**, **Custom TCP Transport**, and **Streaming Cryptography** into a single, cohesive engine.
 
-Designed with **Google-tier engineering principles**, this system minimizes memory overhead while maximizing data integrity and security across a decentralized cluster.
+Designed for scalability and resilience, this system eliminates the need for central authority while providing industrial-grade data integrity and security—mirroring the architectural principles found in large-scale distributed systems like Cloud Object Storage or BitTorrent.
 
 ---
 
-## 🏗️ System Architecture
+## 🏛️ System Architecture
 
-Our architecture focuses on low-latency, stateless coordination.
+Our design prioritizes **Zero-Buffer I/O** and **Stateless Discovery**. Unlike centralized storage, every node in this network acts as both an indexer and a provider.
 
 ```mermaid
 graph TD
@@ -28,73 +29,79 @@ graph TD
     end
 
     subgraph "Distributed Network"
-        F <-->|Custom Frame Encoding| G[Peer 1]
-        F <-->|Custom Frame Encoding| H[Peer 2]
-        F <-->|Custom Frame Encoding| I[Peer N]
+        F <---|"Custom Binary Protocol" ---> G[Peer Cluster]
     end
 
     D -->|Encrypted Chunk| E
-    E -->|Write| J[(Local Storage: B-Tree Like Hierarchy)]
+    E -->|O(1) Write| J[(Local Storage: Sharded Hierarchy)]
 ```
 
 ---
 
-## 📚 Detailed Documentation
+## 🚀 Engineering Deep Dives
 
-For a deep dive into the engineering specifics, explore our technical specifications:
+### 1. Content-Addressable Storage (CAS)
+Traditional storage uses file names. This system uses **Mathematical Identity**.
+- **The Process**: Files are hashed using SHA1. The hash *is* the pointer.
+- **The Value**: 
+    - **Self-Verifying Integrity**: The data address is a cryptographic proof of its content.
+    - **Global Deduplication**: Identical data across the network occupies exactly one address.
+- **Scalability**: Uses a **Sharded Directory Hierarchy** (e.g., `/af32d/12c3b/...`) to prevent directory "hotspotting" and filesystem degradation.
 
-- **[Architecture Specification](docs/ARCHITECTURE.md)**: Deep dive into distributed state, design philosophy, and concurrency models.
-- **[Wire Protocol Specification](docs/PROTOCOL.md)**: Details on the custom TCP frame structure and non-blocking decoder logic.
-- **[Security & Crypto Specification](docs/SECURITY.md)**: Mathematical details of the AES-CTR streaming encryption and IV management.
+### 2. High-Performance TCP Wire Protocol
+Instead of standard HTTP, we implemented a custom, lightweight TCP protocol designed for **Large Object Transfers**.
+- **Stateful Decoding**: Our `DefaultDecoder` peeks at the wire using a `Switch-Case` strategy, allowing it to transition seamlessly between **GOB-encoded metadata** and **raw binary streams** without resetting connections.
+- **Multiplexed Logic**: Pause/Resume mechanics allow nodes to process control messages while data streams in the background.
+
+### 3. Handling "Massive" Files ($O(1) Memory$)
+A core requirement for production systems is that memory usage must not scale with file size.
+- **Streaming Pipeline**: Uses Go's `io.Reader` and `io.Writer` interfaces throughout. Data moves through the crypto engine and out to the disk in small chunks (32KB buffers).
+- **Constant Memory**: Whether you store a 10MB photo or a 100GB 8K video, the node's memory footprint remains nearly constant.
+
+### 4. Cryptographic Security
+- **AES-CTR (Counter Mode)**: Chosen for its parallelizable nature and compatibility with streaming data (no padding required).
+- **IV Salt Propagation**: Every file transaction generates a unique Initialization Vector (IV), prepended to the data to prevent frequency analysis attacks.
 
 ---
 
-## 🚀 Key Engineering Pillars
+## 📈 Scalability & Performance Metrics
 
-### 1. Mathematical Content-Addressability (CAS)
-We treat data as its own address via SHA1 hashing. This provides **implicit deduplication** and **inherent integrity verification**. If a file is modified, its address changes, making tampering impossible to hide.
-
-### 2. High-Efficiency Streaming Protocol
-Unlike traditional P2P systems that buffer entire files, our custom TCP protocol supports **Multiplexed Streaming**. We use a single-byte prefixing strategy to switch between control messages and raw binary data on the same wire, achieving $O(1)$ memory complexity regardless of file size.
-
-### 3. Balanced Storage Hierarchy
-To prevent OS-level performance degradation, we implement a path transformation algorithm that distributes millions of files into a balanced subdirectory tree, preventing "dense folder" bottlenecks.
-
-### 4. End-to-End Streaming Security
-Files are never stored or transmitted in plain text. We utilize **AES-256 CTR** for streaming encryption, ensuring that every file segment is secure from the moment it leaves the source until it is persisted on a remote disk.
+- **Write Complexity**: $O(1)$ directory lookup via sharded CAS pathing.
+- **Read Latency**: Minimized through parallel discovery broadcast.
+- **Replication**: Fully decentralized replication across all interconnected nodes.
 
 ---
 
 ## 🚦 Getting Started
 
-### Prerequisites
-- Go 1.26 or higher.
-
-### Quick Start (Multi-Node Simulation)
-The project includes a built-in simulation environment.
+### 1. Installation
 ```bash
-# Clone and build
 git clone https://github.com/ibesuperv/Distributed-File-Storage-System
 cd Distributed-File-Storage-System
 go build -o bin/dfs
+```
 
-# Upload a file (Will trigger broadcast and replication)
+### 2. Launch Local Cluster (Simulation)
+```bash
+# Start nodes and upload a sample file
 make run ARGS="-u test_files/audio.mpeg"
 
-# Download a file (Will trigger network-wide discovery)
+# Download and verify integrity
 make run ARGS="-d audio.mpeg"
 ```
 
 ---
 
-## 🧪 Engineering Philosophy (The "Google" Way)
+## 🧪 Engineering Philosophy
 
-- **Scalability**: Designed to handle arbitrarily large files without RAM spikes.
+- **Scalability**: Designed to handle arbitrarily large files without memory spikes.
 - **Resilience**: A decentralized "Shared Nothing" architecture where any node can fail without data loss.
 - **Observability**: Consistent logging and clear separation of transport vs. storage concerns.
-- **Reliability**: Self-correcting stream logic with WaitGroup-based synchronization.
+- **Reliability**: Self-correcting stream logic with proper synchronization.
 
 ---
 
-## 🤝 Contributing
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+## 🛠️ Project Roadmap
+Next-phase implementation targets:
+- **Distributed Hash Table (DHT)**: Scoping for $O(\log n)$ node discovery.
+- **Erasure Coding**: Resilience planning for multi-node failure scenarios.
