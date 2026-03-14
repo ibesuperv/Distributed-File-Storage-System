@@ -1,0 +1,27 @@
+MongoDB Shell                         MongoDB.Shell                         2.6.0               2.7.0            winget
+Go Programming Language amd64 go1.25… GoLang.Go                             1.25.5              1.26.1           winget
+Git LFS version 3.7.0                 GitHub.GitLFS                         3.7.0               3.7.1            winget
+Java(TM) SE Development Kit 23.0.1 (… Oracle.JDK.23                         23.0.1.0            23.0.2.0         winget
+Blender                               BlenderFoundation.Blender             5.0.0               5.0.1            winget
+MongoDB 8.2.3 2008R2Plus SSL (64 bit) MongoDB.Server                        8.2.3               8.2.5            winget
+MySQL Workbench 8.0 CE                Oracle.MySQLWorkbench                 8.0.43              8.0.46           winget
+MySQL Server 8.0                      Oracle.MySQL                          8.0.43              8.4.8            winget
+Oracle VirtualBox 7.1.8               Oracle.VirtualBox                     7.1.8               7.2.6            winget
+RealVNC Viewer 7.13.1                 RealVNC.VNCViewer                     7.13.1.57           7.15.1.18        winget
+spacedesk Windows DRIVER              Datronicsoft.SpacedeskDriver.Server   2.1.38.0            2.2.17.0         winget
+Visual Studio Build Tools 2026        Microsoft.VisualStudio.BuildTools     18.0.2              18.4.0           winget
+IntelliJ IDEA Community Edition 2024… JetBrains.IntelliJIDEA.Community      2024.3.2            2025.2.6.1       winget
+WebStorm 2024.3                       JetBrains.WebStorm                    2024.3              2025.3.3         winget
+Wireshark 4.4.6 x64                   WiresharkFoundation.Wireshark         4.4.6               4.6.4            winget
+SUMO                                  EclipseFoundation.SUMO                < 1.24.0            1.26.0           winget
+Microsoft Visual C++ 2010  x86 Redis… Microsoft.VCRedist.2010.x86           10.0.30319          10.0.40219       winget
+Python Launcher                       Python.Launcher                       < 3.10.8            3.13.5           winget
+Microsoft Windows Desktop Runtime - … Microsoft.DotNet.DesktopRuntime.8     8.0.20              8.0.25           winget
+Microsoft Visual C++ 2013 Redistribu… Microsoft.VCRedist.2013.x86           12.0.30501.0        12.0.40664.0     winget
+MongoDB Compass                       MongoDB.Compass.Full                  1.49.0              1.49.4.0         winget
+Raspberry Pi Imager                   RaspberryPiFoundation.RaspberryPiIma… 1.8.5               2.0.6            winget
+Microsoft Visual Studio Code Insider… Microsoft.VisualStudioCode.Insiders   1.110.0             1.112.0          winget
+Python 3.10.9 (64-bit)                Python.Python.3.10                    3.10.9              3.10.11          winget
+Microsoft Teams                       Microsoft.Teams                       25306.804.4102.7193 26032.208.4399.5 winget
+Windows Terminal                      Microsoft.WindowsTerminal             1.23.20211.0        1.24.10621.0     winget
+Windows Subsystem for Linux
