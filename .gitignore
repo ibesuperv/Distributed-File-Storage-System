@@ -1,0 +1,13 @@
+# Binaries
+bin/
+*.exe
+*.exe~
+
+# Data & Network Simulation
+*_network/
+recovred_files/
+
+# Go
+vendor/
+*.test
+*.out
