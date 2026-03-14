@@ -1,7 +1,7 @@
 package main
 
 import (
-	"disributed-file-system/p2p"
+	"github.com/ibesuperv/Distributed-File-Storage-System/p2p"
 	"flag"
 	"fmt"
 	"io/ioutil"

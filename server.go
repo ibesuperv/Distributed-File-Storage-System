@@ -2,7 +2,7 @@ package main
 
 import (
 	"bytes"
-	"disributed-file-system/p2p"
+	"github.com/ibesuperv/Distributed-File-Storage-System/p2p"
 	"encoding/binary"
 	"encoding/gob"
 	"fmt"
