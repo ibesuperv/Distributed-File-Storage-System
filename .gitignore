@@ -5,7 +5,7 @@ bin/
 
 # Data & Network Simulation
 *_network/
-recovred_files/
+recovered_files/
 
 # Go
 vendor/
